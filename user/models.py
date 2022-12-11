@@ -29,8 +29,8 @@ class Profile(BaseModel):
     work_address = models.CharField(max_length=50)
     work_activity = models.CharField(max_length=50)
     work_tel = models.CharField(max_length=10)
-    card_id_resource = models.OneToOneField('organization.Resource', on_delete=models.DO_NOTHING)
+    card_id_resource = models.OneToOneField('organization.Resource', on_delete=models.DO_NOTHING, blank=True, null=True)
     role = models.IntegerField(choices=Role.choices, default=Role.MIEMBRO)
 
     def __str__(self):
-        return self.name
+        return self.user.first_name

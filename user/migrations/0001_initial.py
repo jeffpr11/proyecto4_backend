@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
                 ('work_activity', models.CharField(max_length=50)),
                 ('work_tel', models.CharField(max_length=10)),
                 ('role', models.IntegerField(choices=[(0, 'Administrador'), (1, 'Lider'), (2, 'Miembro')], default=2)),
-                ('card_id_resource', models.OneToOneField(on_delete=django.db.models.deletion.DO_NOTHING, to='organization.resource')),
+                ('card_id_resource', models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='organization.resource')),
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.DO_NOTHING, related_name='profile', to=settings.AUTH_USER_MODEL)),
             ],
             options={
