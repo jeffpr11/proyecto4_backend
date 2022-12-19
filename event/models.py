@@ -8,8 +8,8 @@ class Event(BaseModel):
         REUNION = 'B'
         CONFERENCIA = 'C'
 
-    name = models.CharField(max_length=50)
-    description = models.CharField(max_length=300)
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=2000)
     type = models.CharField(
         max_length=1, choices=Type.choices, default=Type.REUNION)
     image = models.ForeignKey('organization.Resource',
@@ -34,7 +34,7 @@ class Record(BaseModel):
 
 
 class Comment(BaseModel):
-    content = models.CharField(max_length=80)
+    content = models.CharField(max_length=2000)
     level = models.SmallIntegerField()
     event = models.ForeignKey('Event', on_delete=models.DO_NOTHING)
     user = models.ForeignKey('user.Profile', on_delete=models.DO_NOTHING)

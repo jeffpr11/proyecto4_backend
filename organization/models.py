@@ -1,5 +1,7 @@
+
 from django.db import models
 from utils.models import BaseModel
+from user.models import Profile
 
 
 class Group(BaseModel):
@@ -7,7 +9,9 @@ class Group(BaseModel):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
     level = models.SmallIntegerField()
-    
+    group_leader = models.ForeignKey(Profile, on_delete=models.DO_NOTHING, blank=True, null=True)
+    members = models.ManyToManyField(Profile, related_name='members')
+
     def __str__(self):
         return self.name
 
