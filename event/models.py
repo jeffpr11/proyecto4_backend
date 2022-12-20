@@ -18,6 +18,7 @@ class Event(BaseModel):
                               on_delete=models.DO_NOTHING)
     date_start = models.DateTimeField(auto_now=False)
     date_end = models.DateTimeField(auto_now=False)
+    capacity = models.IntegerField(default=100)
 
     def __str__(self):
         return self.name
