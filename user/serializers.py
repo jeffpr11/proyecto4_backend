@@ -25,6 +25,7 @@ class TokenPairSerializer(TokenObtainSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
 
+        token['profile_id'] = user.profile.id if hasattr(user, 'profile') else -1
         token['username'] = user.username
         token["name"] = user.first_name + " " + user.last_name
         token['roles'] = ['superuser'] if (user.is_superuser) else [
@@ -66,7 +67,8 @@ class UserSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'first_name',
-            'last_name'
+            'last_name',
+            'email'
         ]
 
 class ProfileSerializer(serializers.ModelSerializer):

@@ -19,7 +19,7 @@ class Profile(BaseModel):
         MIEMBRO = 2
 
     user = models.OneToOneField(User, on_delete=models.DO_NOTHING, related_name='profile')
-    card_id = models.CharField(max_length=10, editable=False)
+    card_id = models.CharField(max_length=10)
     born_date = models.DateField(auto_now=False)
     genre = models.CharField(choices=Genre.choices, default=Genre.FEMENINO, max_length=1)
     civil_status = models.CharField(choices=CivilStatus.choices, default=CivilStatus.SOLTERO, max_length=1)
