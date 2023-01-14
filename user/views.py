@@ -15,6 +15,5 @@ class ReTokenView(TokenRefreshView):
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes = []
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['role']
