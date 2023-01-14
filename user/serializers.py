@@ -25,9 +25,11 @@ class TokenPairSerializer(TokenObtainSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
 
+        token['profile_id'] = user.profile.id if hasattr(user, 'profile') else -1
+        token['username'] = user.username
         token["name"] = user.first_name + " " + user.last_name
-        token['roles'] = [
-            'superuser' if (user.is_superuser) else 'simpleuser'
+        token['roles'] = ['superuser'] if (user.is_superuser) else [
+            group.name for group in user.groups.all()
         ]
 
         return token
@@ -59,7 +61,23 @@ class TokenRefreshSerializer(serializers.Serializer):
         return data
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'id',
+            'first_name',
+            'last_name',
+            'email'
+        ]
+
 class ProfileSerializer(serializers.ModelSerializer):
+    
+    user_details = UserSerializer(source='user', read_only=True)
+    
     class Meta:
         model = Profile
         fields = '__all__'
+        extra_kwargs = {
+            'user': { 'write_only': True },
+        }

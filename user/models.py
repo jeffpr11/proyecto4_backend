@@ -1,3 +1,4 @@
+
 from django.contrib.auth.models import User
 from django.db import models
 from utils.models import BaseModel
@@ -18,7 +19,7 @@ class Profile(BaseModel):
         MIEMBRO = 2
 
     user = models.OneToOneField(User, on_delete=models.DO_NOTHING, related_name='profile')
-    card_id = models.CharField(max_length=10, editable=False)
+    card_id = models.CharField(max_length=10)
     born_date = models.DateField(auto_now=False)
     genre = models.CharField(choices=Genre.choices, default=Genre.FEMENINO, max_length=1)
     civil_status = models.CharField(choices=CivilStatus.choices, default=CivilStatus.SOLTERO, max_length=1)
@@ -31,6 +32,6 @@ class Profile(BaseModel):
     work_tel = models.CharField(max_length=10)
     card_id_resource = models.OneToOneField('organization.Resource', on_delete=models.DO_NOTHING, blank=True, null=True)
     role = models.IntegerField(choices=Role.choices, default=Role.MIEMBRO)
-
+    
     def __str__(self):
         return self.user.first_name
