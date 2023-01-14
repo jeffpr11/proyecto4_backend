@@ -6,6 +6,14 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = '__all__'
+        depth = 1
+        read_only_fields = [
+            'user_creator',
+            'user_modifier',
+            'date_created',
+            'last_action',
+            'state',
+        ]
 
 
 class RecordSerializer(serializers.ModelSerializer):
