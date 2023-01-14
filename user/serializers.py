@@ -78,15 +78,3 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = '__all__'
-        read_only_fields = [
-            'user_creator',
-            'user_modifier',
-            'card_id',
-            'born_date',
-            'work',
-            'work_address',
-            'work_activity',
-            'work_tel',
-            'user',
-            'tel_2',
-        ]
