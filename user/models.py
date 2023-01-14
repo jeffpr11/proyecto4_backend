@@ -34,4 +34,4 @@ class Profile(BaseModel):
     role = models.IntegerField(choices=Role.choices, default=Role.MIEMBRO)
     
     def __str__(self):
-        return self.user.first_name
+        return self.user.get_full_name()

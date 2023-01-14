@@ -30,8 +30,11 @@ class ProfileViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
 
-        #TODO: Agrego/modifico datos
-        # data['extra_field'] = 'extra_value'
+        username = request.user.get_full_name()[:30]
+        data['user_creator'] = username
+        data['user_modifier'] = username
+        data['state'] = 0
+        data['last_action'] = 0
 
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
@@ -43,22 +46,24 @@ class ProfileViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         data = request.data.copy()
 
-        #TODO: Agrego/modifico datos
-        # data['extra_field'] = 'extra_value'
+        username = request.user.get_full_name()[:30]
+        data['user_modifier'] = username
+        data['last_action'] = 1
 
         serializer = self.get_serializer(instance, data=data, partial=True)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data)
 
-    def delete(self, request, *args, **kwargs):
+    def destroy(self, request, *args, **kwargs):
         if not self.request.user.is_staff:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-        
         instance = self.get_object()
         
-        #TODO: Chequear que el state es correcto
+        username = request.user.get_full_name()[:30]
+        instance.user_modifier = username
         instance.state = 1
-        
+        instance.last_action = 2
         instance.save()
+        
         return Response(status=status.HTTP_204_NO_CONTENT)
