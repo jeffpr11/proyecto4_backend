@@ -3,7 +3,7 @@ from .views import *
 
 router = DefaultRouter()
 
-router.register(r'group', GroupViewSet, basename='event')
-router.register(r'resource', ResourceViewSet, basename='record')
+router.register(r'group', GroupViewSet, basename='group')
+router.register(r'resource', ResourceViewSet, basename='resource')
 
 urlpatterns = router.urls
