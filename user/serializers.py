@@ -66,6 +66,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id',
+            'username',
             'first_name',
             'last_name',
             'email'
@@ -74,6 +75,7 @@ class UserSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     
     user_details = UserSerializer(source='user', read_only=True)
+    total_groups = serializers.IntegerField(read_only=True)
     
     class Meta:
         model = Profile
@@ -88,5 +90,5 @@ class ProfileSerializer(serializers.ModelSerializer):
             'work_activity',
             'work_tel',
             'user',
-            'tel_2',
+            'tel_2'
         ]

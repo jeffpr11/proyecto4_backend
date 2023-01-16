@@ -8,14 +8,14 @@ class Event(BaseModel):
         REUNION = 'B'
         CONFERENCIA = 'C'
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=50)
     description = models.CharField(max_length=2000)
     type = models.CharField(
         max_length=1, choices=Type.choices, default=Type.REUNION)
     image = models.ForeignKey('organization.Resource',
-                              on_delete=models.DO_NOTHING)
+                              on_delete=models.DO_NOTHING, blank=True, null=True)
     group = models.ForeignKey('organization.Group',
-                              on_delete=models.DO_NOTHING)
+                              on_delete=models.DO_NOTHING, blank=True, null=True)
     date_start = models.DateTimeField(auto_now=False)
     date_end = models.DateTimeField(auto_now=False)
     capacity = models.IntegerField(default=100)

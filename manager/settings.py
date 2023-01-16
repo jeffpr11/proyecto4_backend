@@ -1,4 +1,5 @@
-import environ
+
+import environ, os
 from pathlib import Path
 from datetime import timedelta
 
@@ -66,13 +67,17 @@ WSGI_APPLICATION = 'manager.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': env.str('DB_HOST', default='localhost'),                     
-        'PORT': env.str('DB_PORT', default=''),
-        'NAME': env.str('DB_NAME'),
-        'USER': env.str('DB_USER'),                     
-        'PASSWORD': env.str('DB_PASS')
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase'
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'HOST': env.str('DB_HOST', default='localhost'),                     
+    #     'PORT': env.str('DB_PORT', default=''),
+    #     'NAME': env.str('DB_NAME'),
+    #     'USER': env.str('DB_USER'),                     
+    #     'PASSWORD': env.str('DB_PASS')
+    # }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -112,10 +117,13 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication'
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 6
+    'PAGE_SIZE': 9
 }
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=2),
 }
+
+MEDIA_URL = env.str('MEDIA_URL')
+MEDIA_ROOT = os.path.join(BASE_DIR, env.str('MEDIA_ROOT'))
