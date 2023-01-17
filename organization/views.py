@@ -39,11 +39,17 @@ class GroupViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request, pk=None):
         instance = self.get_object()
-        query = request.GET.get('members_recursive', None)
-        resp = self.serializer_class(instance).data
-        if query:
-            resp = instance.all_members()
-        return Response(resp, status=status.HTTP_200_OK)
+        if request.GET.get('members_recursive', None):
+            queryset = instance.get_related_members()
+        if request.GET.get('leaders_recursive', None):
+            queryset = instance.get_related_leaders()
+        if bool(request.GET):
+            page = self.paginate_queryset(queryset)
+            if page is not None:
+                serialized = ProfileSerializer(page, many=True)
+                return self.get_paginated_response(serialized.data)
+        serialized = self.serializer_class(instance)
+        return Response(serialized.data, status=status.HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
