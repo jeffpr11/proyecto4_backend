@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from django.db.models import Count
 from .models import *
 from .serializers import *
 from django_filters.rest_framework import DjangoFilterBackend
@@ -11,10 +12,11 @@ class EventViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
 
     def get_queryset(self):
+        qs_count = Event.objects.annotate(total_records=Count('record'))
         if self.request.user.is_staff:
-            return Event.objects.all().order_by('-date_created')
+            return qs_count.order_by('-date_created')
         else:
-            return Event.objects.filter(state=0).order_by('-date_created')
+            return qs_count.filter(state=0).order_by('-date_created')
 
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
