@@ -37,6 +37,14 @@ class GroupViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
+    def retrieve(self, request, pk=None):
+        instance = self.get_object()
+        query = request.GET.get('members_recursive', None)
+        resp = self.serializer_class(instance).data
+        if query:
+            resp = instance.all_members()
+        return Response(resp, status=status.HTTP_200_OK)
+
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         data = request.data.copy()
