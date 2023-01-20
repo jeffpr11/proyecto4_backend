@@ -10,6 +10,7 @@ class Group(BaseModel):
     level = models.SmallIntegerField()
     group_leader = models.ForeignKey('user.Profile', on_delete=models.DO_NOTHING, blank=True, null=True)
     members = models.ManyToManyField('user.Profile', related_name='groups')
+    img_file = models.ForeignKey('Image', on_delete=models.DO_NOTHING, related_name='file_group')
 
     def __str__(self):
         return self.name
@@ -48,6 +49,13 @@ class Resource(BaseModel):
     name = models.CharField(max_length=50)
     route = models.FileField()
     groups = models.ManyToManyField('Group')
+
+    def __str__(self):
+        return self.name
+
+class Image(BaseModel):
+    name = models.CharField(max_length=50)
+    route = models.FileField(upload_to='images', default='default.png')
 
     def __str__(self):
         return self.name

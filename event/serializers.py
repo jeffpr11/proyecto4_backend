@@ -1,17 +1,16 @@
 
 from rest_framework import serializers
 from .models import *
+from organization.serializers import ImageSerializer
 
 
 class EventSerializer(serializers.ModelSerializer):
-    
+
+    img_details = ImageSerializer(source='img_file', read_only=True)
+
     class Meta:
         model = Event
         fields = '__all__'
-        extra_kwargs = {
-            # 'group': { 'write_only': True },
-            # 'image' : { 'write_only': True }
-        }
 
 
 class RecordSerializer(serializers.ModelSerializer):

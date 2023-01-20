@@ -30,8 +30,9 @@ class Profile(BaseModel):
     work_address = models.CharField(max_length=50)
     work_activity = models.CharField(max_length=50)
     work_tel = models.CharField(max_length=10)
-    card_id_resource = models.OneToOneField('organization.Resource', on_delete=models.DO_NOTHING, blank=True, null=True)
     role = models.IntegerField(choices=Role.choices, default=Role.MIEMBRO)
+    card_id_file = models.ForeignKey('organization.Image', on_delete=models.DO_NOTHING, related_name='file_id')
+    img_file = models.ForeignKey('organization.Image', on_delete=models.DO_NOTHING, related_name='file_avatar')
     
     def __str__(self):
         return self.user.get_full_name()
