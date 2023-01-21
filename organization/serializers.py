@@ -4,9 +4,16 @@ from .models import *
 from user.serializers import ProfileSerializer
 
 
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = '__all__'
+
+
 class GroupSerializer(serializers.ModelSerializer):
 
     leader_details = ProfileSerializer(source='group_leader', read_only=True)
+    img_details = ImageSerializer(source='img_file', read_only=True)
 
     class Meta:
         model = Group
@@ -20,10 +27,4 @@ class GroupSerializer(serializers.ModelSerializer):
 class ResourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Resource
-        fields = '__all__'
-
-
-class ImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Image
         fields = '__all__'

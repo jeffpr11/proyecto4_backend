@@ -81,7 +81,7 @@ class ResourceViewSet(viewsets.ModelViewSet):
     queryset = Resource.objects.all()
     serializer_class = ResourceSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['state']
+    filterset_fields = ['groups', 'state']
     search_fields = ['^name']
 
     def get_queryset(self):

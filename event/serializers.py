@@ -6,6 +6,7 @@ from organization.serializers import ImageSerializer
 
 class EventSerializer(serializers.ModelSerializer):
 
+    total_records = serializers.IntegerField(read_only=True)
     img_details = ImageSerializer(source='img_file', read_only=True)
 
     class Meta:
