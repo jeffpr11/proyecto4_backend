@@ -18,6 +18,9 @@ class GroupSerializer(serializers.ModelSerializer):
 
 
 class ResourceSerializer(serializers.ModelSerializer):
+    
+    groups_details = GroupSerializer(source='groups', read_only=True, many=True)
+    
     class Meta:
         model = Resource
         fields = '__all__'

@@ -21,7 +21,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
     serializer_class = ProfileSerializer
     # permission_classes = []
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['role']
+    filterset_fields = ['role', 'user__username']
     
     def get_queryset(self):
 

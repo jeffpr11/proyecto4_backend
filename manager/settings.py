@@ -31,7 +31,8 @@ INSTALLED_APPS = [
     'utils.apps.UtilsConfig',
     'organization.apps.OrganizationConfig',
     'user.apps.UserConfig',
-    'event.apps.EventConfig'
+    'event.apps.EventConfig',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -118,6 +119,16 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 9
+}
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'api_key': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization'
+        }
+    },
 }
 
 SIMPLE_JWT = {

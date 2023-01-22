@@ -12,7 +12,7 @@ from utils.permissions import *
 class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['members', 'level', 'principal_group']
+    filterset_fields = ['members', 'level', 'principal_group', 'group_leader']
     search_fields = ['name']
     permission_classes = [ListAdminOnly]
 
@@ -65,8 +65,12 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 
 class ResourceViewSet(viewsets.ModelViewSet):
+    
     queryset = Resource.objects.all()
     serializer_class = ResourceSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    search_fields = ['name']
+
 
     def get_queryset(self):
         if self.request.user.is_staff:
