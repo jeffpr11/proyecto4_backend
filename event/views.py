@@ -1,9 +1,11 @@
-from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets, status
+from rest_framework.response import Response
+from django.db.models import Count
 from .models import *
 from .serializers import *
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.response import Response
-from rest_framework import status
+from user.models import Profile
+from user.serializers import ProfileSerializer
 
 
 class EventViewSet(viewsets.ModelViewSet):
@@ -11,10 +13,11 @@ class EventViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
 
     def get_queryset(self):
+        qs_count = Event.objects.annotate(total_records=Count('record'))
         if self.request.user.is_staff:
-            return Event.objects.all().order_by('-date_created')
+            return qs_count.order_by('-date_created')
         else:
-            return Event.objects.filter(state=0).order_by('-date_created')
+            return qs_count.filter(state=0).order_by('-date_created')
 
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
@@ -80,6 +83,10 @@ class RecordViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
+        
+        tmp = Record.objects.filter(event=data['event'], user=data['user'])
+        if tmp.exists():
+            return Response(serializer.data, status=status.HTTP_200_OK)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
@@ -162,3 +169,11 @@ class CommentViewSet(viewsets.ModelViewSet):
         instance.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ProfileViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = ProfileSerializer
+
+    def get_queryset(self):
+        event_id = self.kwargs['event_id']
+        return Profile.objects.filter(record__event_id=event_id)

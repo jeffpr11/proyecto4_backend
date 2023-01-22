@@ -1,5 +1,9 @@
+
 from django.db import models
 from utils.models import BaseModel
+from django.core.validators import FileExtensionValidator
+
+from utils.Global import Global
 
 
 class Event(BaseModel):
@@ -10,16 +14,21 @@ class Event(BaseModel):
 
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=2000)
-    type = models.CharField(
-        max_length=1, choices=Type.choices, default=Type.REUNION)
-    image = models.ForeignKey('organization.Resource',
-                              on_delete=models.DO_NOTHING, blank=True, null=True)
-    group = models.ForeignKey('organization.Group',
-                              on_delete=models.DO_NOTHING, blank=True, null=True)
+    type = models.CharField(max_length=1, choices=Type.choices, default=Type.REUNION)
     date_start = models.DateTimeField(auto_now=False)
     date_end = models.DateTimeField(auto_now=False)
     capacity = models.IntegerField(default=100)
-
+    group = models.ForeignKey('organization.Group', on_delete=models.DO_NOTHING, blank=True, null=True)
+    user_profile = models.ForeignKey('user.Profile', on_delete=models.DO_NOTHING, blank=True, null=True)
+    event_image = models.ImageField(
+        upload_to='event/img/', 
+        default = 'event/img/default-event-image.jpg', 
+        validators = [
+            FileExtensionValidator(
+                allowed_extensions = Global.getImageFilesAccepted()
+            )
+        ])
+    
     def __str__(self):
         return self.name
 
@@ -39,8 +48,7 @@ class Comment(BaseModel):
     level = models.SmallIntegerField()
     event = models.ForeignKey('Event', on_delete=models.DO_NOTHING)
     user = models.ForeignKey('user.Profile', on_delete=models.DO_NOTHING)
-    principal_comment = models.ForeignKey(
-        'self', on_delete=models.DO_NOTHING, blank=True, null=True)
+    principal_comment = models.ForeignKey('self', on_delete=models.DO_NOTHING, blank=True, null=True)
 
     def __str__(self):
         return f'{self.user} {self.event}'

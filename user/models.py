@@ -1,6 +1,9 @@
 
-from django.contrib.auth.models import User
 from django.db import models
+from django.contrib.auth.models import User
+from django.core.validators import FileExtensionValidator
+
+from utils.Global import Global
 from utils.models import BaseModel
 
 
@@ -30,8 +33,23 @@ class Profile(BaseModel):
     work_address = models.CharField(max_length=50)
     work_activity = models.CharField(max_length=50)
     work_tel = models.CharField(max_length=10)
-    card_id_resource = models.OneToOneField('organization.Resource', on_delete=models.DO_NOTHING, blank=True, null=True)
     role = models.IntegerField(choices=Role.choices, default=Role.MIEMBRO)
+    card_image = models.ImageField(
+        upload_to='profile/document/img/', 
+        default = 'profile/document/img/default-card-image.png', 
+        validators = [
+            FileExtensionValidator(
+                allowed_extensions = Global.getImageFilesAccepted()
+            )
+        ])
+    profile_image = models.ImageField(
+        upload_to='profile/img/', 
+        default = 'profile/img/default-profile-image.png', 
+        validators = [
+            FileExtensionValidator(
+                allowed_extensions = Global.getImageFilesAccepted()
+            )
+        ])
     
     def __str__(self):
         return self.user.get_full_name()

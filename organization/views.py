@@ -12,9 +12,14 @@ from utils.permissions import *
 class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['members', 'level', 'principal_group', 'group_leader']
     search_fields = ['name']
-    permission_classes = [ListAdminOnly]
+    filterset_fields = [
+        'level', 
+        'members', 
+        'group_leader', 
+        'group_leader__user__username', 
+        'principal_group'
+    ]
 
     def get_queryset(self):
         if self.request.user.is_staff:
@@ -36,6 +41,20 @@ class GroupViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def retrieve(self, request, pk=None):
+        instance = self.get_object()
+        if request.GET.get('members_recursive', None):
+            queryset = instance.get_related_members()
+        if request.GET.get('leaders_recursive', None):
+            queryset = instance.get_related_leaders()
+        if bool(request.GET):
+            page = self.paginate_queryset(queryset)
+            if page is not None:
+                serialized = ProfileSerializer(page, many=True)
+                return self.get_paginated_response(serialized.data)
+        serialized = self.serializer_class(instance)
+        return Response(serialized.data, status=status.HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -69,8 +88,8 @@ class ResourceViewSet(viewsets.ModelViewSet):
     queryset = Resource.objects.all()
     serializer_class = ResourceSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['groups', 'state']
     search_fields = ['name']
-
 
     def get_queryset(self):
         if self.request.user.is_staff:

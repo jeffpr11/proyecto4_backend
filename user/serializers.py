@@ -13,8 +13,8 @@ class TokenPairSerializer(TokenObtainSerializer):
         data = super().validate(attrs)
         refresh = self.get_token(self.user)
 
-        data["token"] = str(refresh.access_token)
         data["refresh"] = str(refresh)
+        data["token"] = str(refresh.access_token)
 
         if api_settings.UPDATE_LAST_LOGIN:
             update_last_login(None, self.user)
@@ -25,13 +25,13 @@ class TokenPairSerializer(TokenObtainSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
 
-        token['profile_id'] = user.profile.id if hasattr(user, 'profile') else -1
         token['username'] = user.username
         token['name'] = user.first_name + " " + user.last_name
+        token['profile_id'] = user.profile.id if hasattr(user, 'profile') else -1
         token['roles'] = ['superuser'] if (user.is_superuser) else [
             group.name for group in user.groups.all()
         ]
-
+        
         return token
 
 

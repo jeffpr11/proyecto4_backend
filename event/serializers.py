@@ -13,15 +13,14 @@ class GroupForEventSerializer(serializers.ModelSerializer):
         ]
 
 class EventSerializer(serializers.ModelSerializer):
-    
-    group_details = GroupForEventSerializer(source='group', read_only=True)
+
+    total_records = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Event
         fields = '__all__'
         extra_kwargs = {
-            'group': { 'write_only': True },
-            # 'image' : { 'write_only': True }
+            'group': { 'write_only': True }
         }
 
 
