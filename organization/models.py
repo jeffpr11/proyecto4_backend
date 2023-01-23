@@ -12,7 +12,7 @@ class Group(BaseModel):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=1000)
     level = models.SmallIntegerField()
-    group_leader = models.ForeignKey('user.Profile', on_delete=models.DO_NOTHING, blank=True, null=True)
+    group_leader = models.ForeignKey('user.Profile', on_delete=models.DO_NOTHING, blank=True, null=True, related_name='main_group')
     members = models.ManyToManyField('user.Profile', related_name='members')
     group_image = models.ImageField(
         upload_to='groups/img/', 

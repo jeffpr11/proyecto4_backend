@@ -24,7 +24,11 @@ class ProfileViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
 
-        countAgregate = Profile.objects.annotate(total_groups = Count('group'))
+        countAgregate = Profile.objects.annotate(
+            total_groups = Count('members'),
+            total_events = Count('event'),
+            # total_comments = Count('comment')
+        )
 
         if self.request.user.is_staff:
             return countAgregate.order_by('-date_created')

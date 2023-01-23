@@ -14,7 +14,7 @@ class BaseModel(models.Model):
         DELETE = 2
     
     state = models.IntegerField(choices=State.choices, default=State.ACTIVE)
-    date_created = models.DateField(default=date.today, auto_now=False, null=True)
+    date_created = models.DateTimeField(auto_now=True, null=True)
     date_modified = models.DateField(auto_now=True)
     user_creator = models.CharField(max_length=30)
     user_modifier = models.CharField(max_length=30)

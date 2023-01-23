@@ -1,9 +1,13 @@
+
 from rest_framework_simplejwt.serializers import TokenObtainSerializer
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import update_last_login
 from rest_framework import serializers
+
 from .models import *
+from organization.models import Group;
+
 
 
 class TokenPairSerializer(TokenObtainSerializer):
@@ -74,8 +78,10 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     
-    user_details = UserSerializer(source='user', read_only=True)
+    total_events = serializers.IntegerField(read_only=True)
     total_groups = serializers.IntegerField(read_only=True)
+    total_comments = serializers.IntegerField(read_only=True)
+    user_details = UserSerializer(source='user', read_only=True)
     
     class Meta:
         model = Profile

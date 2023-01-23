@@ -9,11 +9,17 @@ from user.serializers import ProfileSerializer
 
 
 class EventViewSet(viewsets.ModelViewSet):
+    
     serializer_class = EventSerializer
     filter_backends = [DjangoFilterBackend]
 
     def get_queryset(self):
-        qs_count = Event.objects.annotate(total_records=Count('record'))
+        
+        qs_count = Event.objects.annotate(
+            total_records = Count('record'), 
+            total_comments = Count('comment')
+        )
+        
         if self.request.user.is_staff:
             return qs_count.order_by('-date_created')
         else:
