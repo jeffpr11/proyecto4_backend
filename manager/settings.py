@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'rest_framework_simplejwt',
+    'simple_history',
     'utils.apps.UtilsConfig',
     'organization.apps.OrganizationConfig',
     'user.apps.UserConfig',
@@ -68,8 +69,12 @@ WSGI_APPLICATION = 'manager.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'data_fresca.sqlite3'),
+        'ENGINE': env.str('DB_ENGINE', default = 'django.db.backends.postgresql'),
+        'HOST': env.str('DB_HOST', default = 'localhost'),                     
+        'PORT': env.str('DB_PORT', default = '5432'),
+        'NAME': env.str('DB_NAME'),
+        'USER': env.str('DB_USER'),    
+        'PASSWORD': env.str('DB_PASS')
     }
 }
 

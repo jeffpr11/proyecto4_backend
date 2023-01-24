@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from rest_framework import status
-
+from rest_framework.decorators import api_view
 
 class TokenView(TokenObtainPairView):
     serializer_class = TokenPairSerializer
@@ -25,9 +25,9 @@ class ProfileViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
 
         countAgregate = Profile.objects.annotate(
-            total_groups = Count('members'),
-            total_events = Count('event'),
-            # total_comments = Count('comment')
+            total_groups = Count('members', distinct=True),
+            total_events = Count('event', distinct=True),
+            # total_comments = Count('comment', distinct=True),
         )
 
         if self.request.user.is_staff:
@@ -75,3 +75,16 @@ class ProfileViewSet(viewsets.ModelViewSet):
         instance.save()
         
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class LogProfileViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Profile.history.all()
+    serializer_class = ProfileHistorySerializer
+
+
+@api_view(['GET'])
+def get_stats(request):
+    resp = {
+        'profile_count': Profile.objects.filter(state=0).count(),
+    }
+    return Response(resp)

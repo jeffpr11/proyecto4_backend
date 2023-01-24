@@ -6,7 +6,7 @@ from .models import *
 from .serializers import *
 from user.models import Profile
 from user.serializers import ProfileSerializer
-
+from rest_framework.decorators import api_view
 
 class EventViewSet(viewsets.ModelViewSet):
     
@@ -16,8 +16,8 @@ class EventViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         
         qs_count = Event.objects.annotate(
-            total_records = Count('record'), 
-            total_comments = Count('comment')
+            total_records = Count('record', distinct=True), 
+            total_comments = Count('comment', distinct=True)
         )
         
         if self.request.user.is_staff:
@@ -183,3 +183,37 @@ class ProfileViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         event_id = self.kwargs['event_id']
         return Profile.objects.filter(record__event_id=event_id)
+
+
+class EventLogViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Event.history.all()
+    serializer_class = EventHistorySerializer
+
+
+class RecordLogViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Record.history.all()
+    serializer_class = RecordHistorySerializer
+
+
+class CommentLogViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Comment.history.all()
+    serializer_class = CommentHistorySerializer
+
+
+@api_view(['GET'])
+def get_history(request):
+    m = request.GET.get('member')
+    t3 = Record.objects.filter(user=m).order_by('-date_created')
+    serializer3 = RecordSerializer(t3, many=True)
+    return Response({'3': serializer3.data.copy()})
+
+
+@api_view(['GET'])
+def get_stats(request):
+    
+    resp = {
+        'events_count': Event.objects.filter(state=0).count(),
+        'records_insterested_count': Record.objects.filter(state=0, interested_record=True, confirmed_record=False).count(),
+        'records_confirmed_count': Record.objects.filter(state=0, interested_record=True, confirmed_record=True).count(),
+    }
+    return Response(resp)

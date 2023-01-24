@@ -16,10 +16,29 @@ class GroupSerializer(serializers.ModelSerializer):
         }
 
 
+class GroupDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = [
+            'name'
+        ]
+
 class ResourceSerializer(serializers.ModelSerializer):
     
-    groups_details = GroupSerializer(source='groups', read_only=True, many=True)
+    groups_details = GroupDetailSerializer(source='groups', read_only=True, many=True)
     
     class Meta:
         model = Resource
+        fields = '__all__'
+
+
+class GroupHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group.history.model
+        fields = '__all__'
+
+
+class ResourceHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Resource.history.model
         fields = '__all__'

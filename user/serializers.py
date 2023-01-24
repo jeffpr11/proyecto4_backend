@@ -86,3 +86,9 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = '__all__'
+
+
+class ProfileHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile.history.model
+        fields = '__all__'
