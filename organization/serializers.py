@@ -1,7 +1,8 @@
 
 from rest_framework import serializers
 from .models import *
-from user.serializers import ProfileSerializer
+
+from user.serializers import ProfileSerializer, UserSerializer
 
 class GroupSerializer(serializers.ModelSerializer):
 
@@ -17,11 +18,18 @@ class GroupSerializer(serializers.ModelSerializer):
 
 
 class GroupDetailSerializer(serializers.ModelSerializer):
+
+    user_last_name = serializers.CharField(source='group_leader.user.last_name', read_only=True)
+    user_first_name = serializers.CharField(source='group_leader.user.first_name', read_only=True)
+
     class Meta:
         model = Group
         fields = [
-            'name'
+            'name',
+            'user_last_name',
+            'user_first_name',
         ]
+
 
 class ResourceSerializer(serializers.ModelSerializer):
     

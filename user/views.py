@@ -27,7 +27,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
         countAgregate = Profile.objects.annotate(
             total_groups = Count('members', distinct=True),
             total_events = Count('event', distinct=True),
-            # total_comments = Count('comment', distinct=True),
+            total_comments = Count('comment', distinct=True),
         )
 
         if self.request.user.is_staff:
